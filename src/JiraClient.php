@@ -179,6 +179,14 @@ class JiraClient
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
 
+        // Allow manual setting of the SSL version
+
+        $sslVersion = $this->getConfiguration()->getCurlOptSslVersion();
+
+        if ($sslVersion !== null) {
+            curl_setopt($ch, CURLOPT_SSLVERSION, $sslVersion);
+        }
+
         // post_data
         if (!is_null($post_data)) {
             // PUT REQUEST

@@ -57,6 +57,13 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     protected $curlOptSslVerifyPeer;
 
     /**
+     * Curl options CURLOPT_SSLVERSION.
+     *
+     * @var int|null
+     */
+    protected $curlOptSslVersion;
+
+    /**
      * Curl options CURLOPT_VERBOSE.
      *
      * @var bool
@@ -131,6 +138,14 @@ abstract class AbstractConfiguration implements ConfigurationInterface
     public function isCurlOptSslVerifyPeer()
     {
         return $this->curlOptSslVerifyPeer;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCurlOptSslVersion()
+    {
+        return $this->curlOptSslVersion;
     }
 
     /**

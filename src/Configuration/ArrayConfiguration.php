@@ -22,6 +22,7 @@ class ArrayConfiguration extends AbstractConfiguration
         $this->jiraLogLevel = 'WARNING';
         $this->curlOptSslVerifyHost = false;
         $this->curlOptSslVerifyPeer = false;
+        $this->curlOptSslVersion = null;
         $this->curlOptVerbose = false;
         $this->cookieAuthEnabled = false;
 
