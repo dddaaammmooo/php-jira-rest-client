@@ -198,18 +198,20 @@ class JiraClient
             if (!is_null($custom_request) && $custom_request == 'DELETE') {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
             } else {
-                // This is a GET request, check if we have a cached version of it
+                if (self::$cache) {
+                    // This is a GET request, check if we have a cached version of it
 
-                $cacheFilename = sys_get_temp_dir() . "/" . hash('sha256', $url) . ".cache";
+                    $cacheFilename = sys_get_temp_dir() . "/" . hash('sha256', $url) . ".cache";
 
-                if (file_exists($cacheFilename) && is_readable($cacheFilename)) {
-                    // Check the age of the cached result, if its too old we will ignore it
+                    if (file_exists($cacheFilename) && is_readable($cacheFilename)) {
+                        // Check the age of the cached result, if its too old we will ignore it
 
-                    if (time() - filemtime($cacheFilename) < 600) {
-                        return unserialize(file_get_contents($cacheFilename));
-                    } else {
-                        // Cache has expired
-                        unlink($cacheFilename);
+                        if (time() - filemtime($cacheFilename) < 600) {
+                            return unserialize(file_get_contents($cacheFilename));
+                        } else {
+                            // Cache has expired
+                            unlink($cacheFilename);
+                        }
                     }
                 }
             }
@@ -330,6 +332,35 @@ class JiraClient
         $this->log->addDebug('Curl exec=' . $url);
 
         return $ch;
+    }
+
+    private static $cache = true;
+
+    /**
+     * Disable the HTTP GET cache
+     */
+    public static function disableCache() {
+        self::$cache = false;
+    }
+
+    /**
+     * Enable the HTTP GET cache
+     */
+    public static function enableCache() {
+        self::$cache = false;
+    }
+
+    /**
+     * Invalidate a single URL in the cache
+     *
+     * @param string $url
+     */
+    public static function invalidateCacheUrl($url) {
+        $cacheFilename = sys_get_temp_dir() . "/" . hash('sha256', $url) . ".cache";
+
+        if (file_exists($cacheFilename) && is_readable($cacheFilename)) {
+            unlink($cacheFilename);
+        }
     }
 
     /**
